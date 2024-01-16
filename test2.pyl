@@ -1,0 +1,15 @@
+this file is for testing some stuff, but the second time
+get
+add 10
+loop 6 mul 50
+print
+is 90
+div 15
+print
+make 4
+add 5
+add 5
+loop 5 mul 4
+div 3
+print
+stop

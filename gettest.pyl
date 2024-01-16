@@ -1,0 +1,5 @@
+this file is a test of the new "get" action
+get
+add 10
+mul 2
+print

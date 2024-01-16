@@ -1,0 +1,70 @@
+introducing the psuedo-language pyil!(pyil is pronouced "pile", the name is a combination of "py" and "IL"(since it was inspired by it))
+this language centers around incrementing, decrement, etc a "pointer"(an int)
+(for more context, look at the file while you read the printed out comments)
+
+all whitespace execept spaces(unless it's not a valid action) is ignored
+anything that is not a valid action is read as a comment(and therefore, is printed)
+
+
+
+the most basic action is "print", it prints out the pointer's current value
+print
+
+
+the actions "add" and "sub" are the second most basic actions
+they add X to the pointer and subtract X to and from the the pointer, respectively
+add 5
+print
+sub 1
+print
+
+
+the third most actions are "mul" and "div"
+they multiply and divide the pointer by X, respectively
+mul 3
+print
+div 2
+print
+
+
+the "zero" action simply sets the pointer zero
+zero
+
+
+speaking of 'set', the "make" action sets the pointer to the given number
+make 15
+
+
+also speaking of 'set', the "get" action sets the pointer to the user's input
+get
+
+
+the "loop" action is interesting(it was also a little annoying to code, but uh...)
+it goes in the format of "loop [times] [action] [action input]"
+loop 2 add 3
+print
+
+
+make 4
+
+the "is" action checks if the pointer is the given number, prints the result, and feeds it to the next "if" action
+is 10
+
+the "if/else/end" actions(in addition to being really annoying to code in) are a bit more complex than the previous
+the "if" action is used as "if [True/False]"(it's not case-depentant, that's just a python habit)
+if it is True/False, it will run the actions under it until the "else" action
+the "else" action will run anything under it until the "end" action if it was not True/False
+the "end" action is the end of each "if/else/end"; IT IS NEEDED, ALWAYS ADD IT
+(comments can also be used optionally in a "if/else/end" like any other action)
+if True
+make 10
+else
+add 2
+end
+print
+
+
+this would be the part where I talk about the "goto" action, but that one's still in-progress
+
+
+and that's all pyil has to offer at this point!

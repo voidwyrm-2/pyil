@@ -1,0 +1,14 @@
+add 1
+add 1
+add 1
+print
+make 10
+print
+sub 13
+is 9
+print
+make 13
+div 4
+print
+mul 25
+print

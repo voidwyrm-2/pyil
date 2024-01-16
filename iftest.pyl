@@ -1,0 +1,9 @@
+this file is a test of the new "if" action
+get
+is 10
+if true
+add 10
+else
+div 3
+end
+print

@@ -1,0 +1,4 @@
+this file is a test of the new "loop" function
+print
+loop 4 add 10
+print
