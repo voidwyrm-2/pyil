@@ -49,13 +49,21 @@ def trueparse(line: str, lis: list):
 
         if sl[0] == 'print': print(f'pointer: {pointer}')
     
-        elif sl[0] == 'add': pointer += int(sl[1])
+        elif sl[0] == 'add':
+            if sl[1] == 'get': pointer += get()
+            else: pointer += int(sl[1])
     
-        elif sl[0] == 'sub': pointer -= int(sl[1])
+        elif sl[0] == 'sub':
+            if sl[1] == 'get': pointer -= get()
+            else: pointer -= int(sl[1])
     
-        elif sl[0] == 'mul': pointer *= int(sl[1])
+        elif sl[0] == 'mul':
+            if sl[1] == 'get': pointer *= get()
+            else: pointer *= int(sl[1])
     
-        elif sl[0] == 'div': pointer //= int(sl[1])
+        elif sl[0] == 'div':
+            if sl[1] == 'get': pointer //= get()
+            else: pointer //= int(sl[1])
     
         elif sl[0] == 'zero': pointer = 0
     
@@ -83,7 +91,7 @@ def trueparse(line: str, lis: list):
 
         
         else:
-            if sl[0] != 'else' and sl[0] != 'end' and sl[0] != '': print(line)
+            if sl[0] != 'else' and sl[0] != 'end' and sl[0] != 'goto' and sl[0] != '': print(line)
 
     elif ifjump:
         if sl[0] == 'else': ifjump = False; iselse == True
@@ -98,11 +106,18 @@ def trueparse(line: str, lis: list):
 
 def fakeparse(input: tuple):
     global pointer
+    global cangoto
     #print('whaaat?')
     if not input[1]: return
     sinp = input[0].split('\n')
+    #print(f'sinp: {sinp}')
     #print(sinp)
-    for l in sinp:
+    maxlines = len(sinp)
+    #print(f'maxlines:{maxlines}')
+    lineindex = 0
+    while lineindex != maxlines:
+        #print(f'lineindex:{lineindex}')
+        l = sinp[lineindex]
         #print(l.split(' '))
         if l.split(' ')[0] == 'return' or l.split(' ')[0] == 'break' or l.split(' ')[0] == 'stop':
             #print('twas quit')
@@ -112,12 +127,17 @@ def fakeparse(input: tuple):
             for i in range(int(l.split(' ')[1])): trueparse(l.split(' ')[2] + ' ' + l.split(' ')[3], sinp)
         elif l.split(' ')[0] == 'goto' and cangoto:
             if len(l.split(' ')) == 2:
-                sln = int(l.split(' ')[1])
-                sln = minmax(sln, 0, len(sinp))
-            else: None
+                toline = int(l.split(' ')[1])
+                toline = minmax(toline, 0, maxlines - 1)
+                lineindex = toline
+                
+            else: lineindex = 0
+            cangoto = False
+        elif l.split(' ')[0] == 'lines': print(f'line count: {maxlines}')
         else:
             #print('got else in fakeparse!')
             trueparse(l, sinp)
+        lineindex += 1
 
 def parsegrab(file): fakeparse(grab(file))
 

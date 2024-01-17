@@ -1,0 +1,15 @@
+this file is a test of the new "goto" action
+print
+add 3
+print
+get
+is 20
+if True
+got "True"!
+div 3
+else
+got "else"!
+goto 5
+make 20
+end
+print

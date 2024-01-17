@@ -16,6 +16,7 @@ to stop a line from running completely, add "##" to the subtract
 
 the actions "add" and "sub" are the second most basic actions
 they add X to the pointer and subtract X to and from the the pointer, respectively
+added in v1.5: instead of a number, you can add "get" as the input and it will ask for an input then add/subtract from the pointer by that input
 add 5
 print
 sub 1
@@ -24,6 +25,7 @@ print
 
 the third most actions are "mul" and "div"
 they multiply and divide the pointer by X, respectively
+added in v1.5: instead of a number, you can add "get" as the input and it will ask for an input then multiply/divide the pointer by that input
 mul 3
 print
 div 2
@@ -72,7 +74,16 @@ print
 
 
 
-this would be the part where I talk about the "goto" action, but that one's still in-progress
+added in v1.5: the "goto" action let's you jump to any line before or ahead once(the index used starts at 0)
+after v1.5.1: you can also add "rep" as a second input to make the "goto" repeat infinitely(use carefully)
+goto 68
+
+added in v1.5: the "lines" action shows the total lines of the file, including whitespace
+
+
+
+
+
 
 
 and that's all pyil has to offer at this point!
