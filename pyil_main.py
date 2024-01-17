@@ -2,15 +2,62 @@ from pathlib import Path
 
 
 
+symbols = [
+    '!',
+    '@',
+    '#',
+    '$',
+    "%",
+    '^',
+    '&',
+    '*',
+    '(',
+    ')'
+    
+    #,''
+]
+
+letters = [
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z',
+    ' '
+]
+
 def minmax(input: int | float, min: int | float, max: int | float):
     if input < min: return min
     elif input > max: return max
     else: return input
 
 
+
 DEBUG = [False, False]
 
 pointer = 0
+transnums = []
 
 isa = None
 
@@ -30,13 +77,30 @@ def get(): getin = input('type a number below\n'); return int(getin)
 
 def wait(): input('waiting for user...')
 
+def translate(numbers: str | list | tuple):
+    global letters
+    tra = ''
+    for lnum in list(numbers):
+        lnum = minmax(lnum, 0, len(letters) - 1)
+        tra = f'{tra}{letters[lnum]}'
+    return tra
 
-def trueparse(line: str, lis: list):
+def encrypt(numbers: str | list | tuple):
+    global symbols
+    enc = ''
+    for enum in list(numbers):
+        enum = minmax(enum, 0, len(symbols) - 1)
+        enc = f'{enc}{symbols[enum]}'
+    return enc
+
+
+def trueparse(line: str):
     global pointer
     global isa
     global ifjump
     global elsejump
     global iselse
+    global transnums
     #print('line: ' + line)
     sl = line.split(' ')
     #print(sl)
@@ -93,6 +157,14 @@ def trueparse(line: str, lis: list):
 
         elif sl[0] == 'else' and isa != None: iselse = True
 
+        elif sl[0] == 'cleartrans': transnums.clear()
+
+        elif sl[0] == 'totrans': transnums.append(pointer)
+
+        elif sl[0] == 'trans':
+            if sl[1] == 'L': print(translate(transnums))
+            elif sl[1] == 'E': print(encrypt(transnums))
+            else: print(f'(trans) unknown input "{sl[1]}"')
         
         else:
             if sl[0] != 'else' and sl[0] != 'end' and sl[0] != 'goto' and sl[0] != '': print(line)
@@ -128,7 +200,7 @@ def fakeparse(input: tuple):
             break
         elif l.split(' ')[0] == 'loop':
             #print('loop found!')
-            for i in range(int(l.split(' ')[1])): trueparse(l.split(' ')[2] + ' ' + l.split(' ')[3], sinp)
+            for i in range(int(l.split(' ')[1])): trueparse(l.split(' ')[2] + ' ' + l.split(' ')[3])
         elif l.split(' ')[0] == 'goto' and cangoto:
             if len(l.split(' ')) == 2:
                 toline = int(l.split(' ')[1])
@@ -140,7 +212,7 @@ def fakeparse(input: tuple):
         elif l.split(' ')[0] == 'lines': print(f'line count: {maxlines}')
         else:
             #print('got else in fakeparse!')
-            trueparse(l, sinp)
+            trueparse(l)
         lineindex += 1
 
 def parsegrab(file): fakeparse(grab(file))
