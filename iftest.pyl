@@ -2,8 +2,10 @@ this file is a test of the new "if" action
 get
 is 10
 if true
+got "is 10"
 add 10
 else
+got "not 10"
 div 3
 end
 print
