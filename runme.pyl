@@ -5,14 +5,18 @@ this language centers around incrementing, decrement, etc a "pointer"(an int)
 all whitespace execept spaces(unless it's not a valid action) is ignored
 anything that is not a valid action is read as a comment(and therefore, is printed)
 
+wait
 
 
 the most basic action is "print", it prints out the pointer's current value
 print
 
+wait
+
 to stop a line from running completely, add "##" to the subtract
 ##print
 
+wait
 
 the actions "add" and "sub" are the second most basic actions
 they add X to the pointer and subtract X to and from the the pointer, respectively
@@ -22,6 +26,7 @@ print
 sub 1
 print
 
+wait
 
 the third most actions are "mul" and "div"
 they multiply and divide the pointer by X, respectively
@@ -31,17 +36,25 @@ print
 div 2
 print
 
+wait
+
 
 the "zero" action simply sets the pointer zero
 zero
+
+wait
 
 
 speaking of 'set', the "make" action sets the pointer to the given number
 make 15
 
+wait
+
 
 also speaking of 'set', the "get" action sets the pointer to the user's input
 get
+
+wait
 
 
 the "loop" action is interesting(it was also a little annoying to code, but uh...)
@@ -49,11 +62,16 @@ it goes in the format of "loop [times] [action] [action input]"
 loop 2 add 3
 print
 
+wait
+
 
 make 4
 
 the "is" action checks if the pointer is the given number, prints the result, and feeds it to the next "if" action
 is 10
+
+wait
+
 
 the "if/else/end" actions(in addition to being really annoying to code in) are a bit more complex than the previous
 the "if" action is used as "if [True/False]"(it's not case-depentant, that's just a python habit)
@@ -68,10 +86,7 @@ add 2
 end
 print
 
-
-
-
-
+wait
 
 
 added in v1.5: the "goto" action let's you jump to any line before or ahead once(the index used starts at 0)
@@ -80,7 +95,7 @@ goto 68
 
 added in v1.5: the "lines" action shows the total lines of the file, including whitespace
 
-
+wait
 
 
 

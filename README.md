@@ -11,7 +11,12 @@ pyil_main.py is where all the cool stuff happens
 Me bad at making good looking and simple code though, so please open an issue if you have a optimization you'd like to share!
 
 
-### Currently at version v1.5.1
+### Currently at version v1.6
+
+<details>
+    <summary>v1.6 changenotes</summary>
+    - Added `wait` action
+</details>
 
 <details>
     <summary>v1.5 changenotes</summary>
@@ -32,7 +37,7 @@ Me bad at making good looking and simple code though, so please open an issue if
     
     - Added line comments `##`
 
-    - Created a syntax highlighting extension for pyil
+    - Created a syntax highlighting extension for pyil(not released yet)
 
     - Fixed the `if/else/end` not working(I can't the understand it's code anymore help)
 </details>

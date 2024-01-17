@@ -28,6 +28,8 @@ def grab(file):
 
 def get(): getin = input('type a number below\n'); return int(getin)
 
+def wait(): input('waiting for user...')
+
 
 def trueparse(line: str, lis: list):
     global pointer
@@ -66,6 +68,8 @@ def trueparse(line: str, lis: list):
             else: pointer //= int(sl[1])
     
         elif sl[0] == 'zero': pointer = 0
+
+        elif sl[0] == 'wait': wait()
     
         elif sl[0] == 'make': pointer = int(sl[1])
 
