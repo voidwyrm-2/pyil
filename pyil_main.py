@@ -13,7 +13,6 @@ isa = None
 jump = False
 iselse = False
 
-
 def grab(file):
     if not Path(file + '.pyl').exists(): print(f'error: {file}.pyl does not exist'); return ('', False)
     with open(f'{file}.pyl', 'rt') as fi: return (fi.read(), True)
@@ -54,18 +53,24 @@ def trueparse(line: str):
         elif sl[0] == 'is':
             if pointer == int(sl[1]): print(f'pointer is {sl[1]}'); isa = True
             else: print(f'pointer is not {sl[1]}'); isa = False
-    
+
         elif sl[0] == 'if':
+            print(f'got {bool(sl[1])} from the bool')
             if isa != bool(sl[1]): jump = True
             else: jump == False
+
+        elif sl[0] == 'else' and isa != None: iselse = True
 
         elif sl[0] == 'goto': pass
             #sln = sl[1]
             #sln = minmax(sln, 0, len(sinp))
+        
         else:
-            if sl[0] != 'else'and sl[0] != '': print(line)
+            if sl[0] != 'else' and sl[0] != 'end' and sl[0] != '': print(line)
+
     elif jump:
         if sl[0] == 'else': jump = False; iselse == True
+
     elif iselse:
         if sl[0] == 'end': jump = False; iselse == False; isa = None
 
@@ -100,5 +105,5 @@ while running:
     inp = input('input argument below\n')
     #print(f'inp:"{inp}"')
     if inp.split(' ')[0] == 'reset': pointer = 0; print('pointer reset to zero')
-    elif inp.split(' ')[0] == 'file' or inp.split(' ')[0] == 'file': parsegrab(inp.split(' ')[1])
+    elif inp.split(' ')[0] == 'file' or inp.split(' ')[0] == 'run': parsegrab(inp.split(' ')[1])
     else: fakeparse((inp, True))
