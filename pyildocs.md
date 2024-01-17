@@ -84,7 +84,7 @@ if it is True/False, it will run the actions under it until the `else` action
 the `else` action will run anything under it until the `end` action if it was not True/False
 the `end` action is the end of each `if/else/end`; IT IS NEEDED, ALWAYS ADD IT
 (comments can also be used optionally in a `if/else/end` like any other action)
-**AS OF v1.5, THIS ACTION DOES NOT WORK**
+~~AS OF v1.5, THIS ACTION DOES NOT WORK~~ fixed as of v1.8(yaaaaay I hated that bug)
 ```
 if True
 make 10
