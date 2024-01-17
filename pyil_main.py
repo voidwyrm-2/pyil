@@ -1,5 +1,17 @@
 from pathlib import Path
+from random import randint
 
+
+vaild_exts = [
+    '.pyl',
+    '.pyil',
+    '.💩'
+]
+
+
+dontprint = [
+    ''
+]
 
 
 symbols = [
@@ -53,6 +65,10 @@ def minmax(input: int | float, min: int | float, max: int | float):
     else: return input
 
 
+def log(data):
+    with open('LOG.txt', 'at') as logfile: logfile.write(str(data) + '\n')
+
+
 
 DEBUG = [False, False]
 
@@ -69,9 +85,21 @@ iselse = False
 cangoto = True
 
 def grab(file):
-    if not Path(file + '.pyl').exists(): print(f'error: {file}.pyl does not exist'); return ('', False)
-    with open(f'{file}.pyl', 'rt') as fi: return (fi.read(), True)
+    tfile = ''
+    for ext in vaild_exts:
+        if Path(file + ext).exists(): tfile = file + ext
+
+    if tfile == '': print(f'error: {file}.(pyl/pyil/💩) does not exist'); return ('', False)
+    with open(tfile, 'rt') as fi: return (fi.read(), True)
     print('how did we get here?'); return ('', False)
+
+
+def printline(lin):
+    canprint = True
+    liact = lin.split(' ')[0]
+    for act in dontprint:
+        if liact == act: canprint = False
+    if canprint: print(lin)
 
 
 def get(): getin = input('type a number below\n'); return int(getin)
@@ -84,7 +112,7 @@ def translate(numbers: str | list | tuple):
     for lnum in list(numbers):
         lnum = minmax(lnum, 0, len(letters) - 1)
         tra = f'{tra}{letters[lnum]}'
-    return tra
+    return f'translate: {tra}'
 
 def encrypt(numbers: str | list | tuple):
     global symbols
@@ -92,11 +120,11 @@ def encrypt(numbers: str | list | tuple):
     for enum in list(numbers):
         enum = minmax(enum, 0, len(symbols) - 1)
         enc = f'{enc}{symbols[enum]}'
-    return enc
+    return f'encrypt: {enc}'
 
 
 def trueparse(line: str):
-    shouldwork = True
+    shouldwork = True ##if this is true, the program works flawlessly, but otherwise it breaks with no explaination
     global pointer
     global isa
     global ifjump
@@ -111,35 +139,35 @@ def trueparse(line: str):
     #print(sl)
     #print(type(sl))
     
-    if DEBUG[0]: print(f'isa:{isa}, ifjump:{ifjump}, elsejump:{elsejump}, iselse{iselse}')
-    if DEBUG[1]: print(f'line:{line}')
+    if DEBUG[0]: print(f'isa:{isa}, ifjump:{ifjump}, elsejump:{elsejump}, iselse{iselse}') ##debug info
+    if DEBUG[1]: print(f'line:{line}') ##debug info
 
 
     if not ifjump and not elsejump:
         
-        if sl[0].startswith('##'): return
+        if sl[0].startswith('##'): return ##if the line starts with the do-not-run flag, don't parse
         
-        if sl[0] != 'goto' and not cangoto: cangoto = True; pass
+        if sl[0] != 'goto' and not cangoto: cangoto = True; pass ##if cangoto is false and the current action isn't goto, make it true
 
-        if sl[0] == 'print': print(f'pointer: {pointer}')
+        if sl[0] == 'print': print(f'pointer: {pointer}') ##print the pointer's current value to the console
     
-        elif sl[0] == 'add':
-            if sl[1] == 'get': pointer += get()
-            else: pointer += int(sl[1])
+        elif sl[0] == 'add': ##add a number
+            if sl[1] == 'get': pointer += get() ##if "get" is given as an instead of a number, add the user's input
+            else: pointer += int(sl[1]) ##otherwise, add the given number
     
-        elif sl[0] == 'sub':
-            if sl[1] == 'get': pointer -= get()
-            else: pointer -= int(sl[1])
+        elif sl[0] == 'sub': ##subtract a number
+            if sl[1] == 'get': pointer -= get() ##if "get" is given as an instead of a number, subtract the user's input
+            else: pointer -= int(sl[1]) ##otherwise, subtract the given number
     
-        elif sl[0] == 'mul':
-            if sl[1] == 'get': pointer *= get()
-            else: pointer *= int(sl[1])
+        elif sl[0] == 'mul': ##multiply by a number
+            if sl[1] == 'get': pointer *= get() ##if "get" is given as an instead of a number, multiply by the user's input
+            else: pointer *= int(sl[1]) ##otherwise, multiply by the given number
     
-        elif sl[0] == 'div':
-            if sl[1] == 'get': pointer //= get()
-            else: pointer //= int(sl[1])
+        elif sl[0] == 'div': ##divide by a number
+            if sl[1] == 'get': pointer //= get() ##if "get" is given as an instead of a number, divide by the user's input
+            else: pointer //= int(sl[1]) ##otherwise, divide by the given number
     
-        elif sl[0] == 'zero': pointer = 0
+        elif sl[0] == 'zero': pointer = 0 ##make the counter 0
 
         elif sl[0] == 'wait': wait()
     
@@ -176,8 +204,21 @@ def trueparse(line: str):
             elif sl[1] == 'E': print(encrypt(transnums))
             else: print(f'(trans) unknown input "{sl[1]}"')
         
+        elif sl[0] == 'rand':
+            rand = 0
+            rand = randint(int(sl[-2]), int(sl[-1]))
+            #log(f'rand: got "{rand}"!')
+            #print(f'rand: got "{rand}"!')
+            if len(sl) >= 4:
+                if sl[1] == 'add': pointer += rand
+                elif sl[1] == 'sub': pointer -= rand
+                elif sl[1] == 'mul': pointer *= rand
+                elif sl[1] == 'div': pointer //= rand
+                elif sl[1] == 'make': pointer = rand
+            else: pointer = rand
+        
         else:
-            if sl[0] != 'else' and sl[0] != 'end' and sl[0] != 'goto' and sl[0] != '': print(line)
+            if sl[0] != 'else' and sl[0] != 'end' and sl[0] != 'goto' and sl[0] != '': print(line) ##otherwise print it to the console
 
     elif ifjump and sl[0] == 'else': ifjump = False; iselse == True; print
 
@@ -191,37 +232,53 @@ def trueparse(line: str):
 def fakeparse(input: tuple):
     global pointer
     global cangoto
+    global isa
+    global ifjump
+    global elsejump
+    global isif
+    global iselse
     #print('whaaat?')
-    if not input[1]: return
-    sinp = input[0].split('\n')
+    if not input[1]: return ##small do-not-run check
+    sinp = input[0].split('\n') ##split the input by lines
     #print(f'sinp: {sinp}')
     #print(sinp)
-    maxlines = len(sinp)
+    maxlines = len(sinp) ##gets the amount of lines
     #print(f'maxlines:{maxlines}')
-    lineindex = 0
-    while lineindex != maxlines:
-        #print(f'lineindex:{lineindex}')
-        l = sinp[lineindex]
+    lineindex = 0 ##the current line
+    while lineindex != maxlines: #if we have not reached the end of the file
+        l = sinp[lineindex] ##get the contents of the current line
+        #log(f'lineindex:{lineindex + 1}("{l}")')
         #print(l.split(' '))
-        if l.split(' ')[0] == 'return' or l.split(' ')[0] == 'break' or l.split(' ')[0] == 'stop':
+
+        if l.split(' ')[0] == 'return' or l.split(' ')[0] == 'break' or l.split(' ')[0] == 'stop': ##if it's "return/break/stop", stop parsing the code completely
             #print('twas quit')
             break
-        elif l.split(' ')[0] == 'loop':
+        
+        elif l.split(' ')[0] == 'loop': ##if it's "loop", repeat the given action the given amount of times
             #print('loop found!')
             for i in range(int(l.split(' ')[1])): trueparse(l.split(' ')[2] + ' ' + l.split(' ')[3])
-        elif l.split(' ')[0] == 'goto' and cangoto:
+
+        elif l.split(' ')[0] == 'goto' and cangoto: ##if it's "goto", 
             if len(l.split(' ')) == 2:
-                toline = int(l.split(' ')[1])
-                toline = minmax(toline, 0, maxlines - 1)
-                lineindex = toline
-                
-            else: lineindex = 0
+                toline = int(l.split(' ')[1]) - 1 ##gets the given line to go to
+                toline = minmax(toline, 0, maxlines - 1) #stops it from being too large or small
+                #log(f'HEY, TOLINE IS "{toline}" AFTER THE MINMAX')
+                lineindex = toline ##makes the current line the given line to go to
+
+            else: lineindex = -1 ##if a line to go to isn't given, go to the first line of the file
+
+            #if len(l.split(' ')) != 3: cangoto = False
+            #else:
+                #if l.split(' ')[2] != 'rep': cangoto = False
             cangoto = False
-        elif l.split(' ')[0] == 'lines': print(f'line count: {maxlines}')
-        else:
-            #print('got else in fakeparse!')
-            trueparse(l)
-        lineindex += 1
+            #ifjump = False; elsejump = False; isif = False; iselse == False; isa = None
+            #ifjump = False; elsejump = False; isif = False; iselse == False; isa = None
+
+        elif l.split(' ')[0] == 'lines': print(f'line count: {maxlines}') ##if it's "lines", give the amount of lines in the file
+
+        else: trueparse(l) ##otherwise parse it as pyil code
+        
+        if cangoto: lineindex += 1 ##increment the current line by 1
 
 def parsegrab(file): fakeparse(grab(file))
 
@@ -232,8 +289,8 @@ type "file/run [file name, not including extension]" to run a file; file must be
 type "reset" to reset the pointer to zero(0)''')
 running = True
 while running:
-    inp = input('input argument below\n')
+    inp = input('input argument below\n') ##get a user's input
     #print(f'inp:"{inp}"')
-    if inp.split(' ')[0] == 'reset': pointer = 0; print('pointer reset to zero')
-    elif inp.split(' ')[0] == 'file' or inp.split(' ')[0] == 'run': parsegrab(inp.split(' ')[1])
-    else: fakeparse((inp, True))
+    if inp.split(' ')[0] == 'reset': pointer = 0; print('pointer reset to zero') ##if "reset", reset the counter to 0
+    elif inp.split(' ')[0] == 'file' or inp.split(' ')[0] == 'run': parsegrab(inp.split(' ')[1]) ##if "file", get the contents of the given file
+    else: fakeparse((inp, True)) ##otherwise parse the arguments as pyil code

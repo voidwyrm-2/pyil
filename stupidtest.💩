@@ -1,0 +1,6 @@
+add 1
+loop 2 mul 2
+print
+totrans
+trans E
+cleartrans

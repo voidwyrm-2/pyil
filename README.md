@@ -4,14 +4,22 @@
 
 Exactly what it says on the tin
 
-Actual documentation in "runme.pyl"
+Actual documentation in "pyildocs.md"
 
 pyil_main.py is where all the cool stuff happens
 
 Me bad at making good looking and simple code though, so please open an issue if you have a optimization you'd like to share!
 
 
-### Currently at version v1.8
+### Currently at version v1.9
+
+<details>
+    <summary>v1.9 changenotes</summary>
+    - added "rand" action
+    - "goto" action does not work(help)
+    - rebuilt file validation system, ".pyl", ".pyil", and ".💩" are all valid extensions now
+    - added some comments in pyil_main.py to explain some parts of the code, marked by "##"
+</details>
 
 <details>
     <summary>v1.8 changenotes</summary>

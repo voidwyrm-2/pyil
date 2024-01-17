@@ -1,0 +1,12 @@
+get
+
+lines
+is 10
+
+if True
+error: input is not 10
+goto 0
+else
+print
+end
+program end
