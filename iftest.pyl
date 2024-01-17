@@ -1,12 +1,13 @@
 this file is a test of the new "if" action
 get
 is 10
-if true
-got "is 10"
+if True
+the if ran(so it is 10)
 add 10
 else
-got "not 10"
+the else ran(so it is not 10)
 div 3
 end
-program end
+
 print
+program end

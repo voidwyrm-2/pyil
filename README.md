@@ -11,7 +11,12 @@ pyil_main.py is where all the cool stuff happens
 Me bad at making good looking and simple code though, so please open an issue if you have a optimization you'd like to share!
 
 
-### Currently at version v1.7
+### Currently at version v1.8
+
+<details>
+    <summary>v1.8 changenotes</summary>
+    - FIXED "IF/ELSE/END" ACTIONS NOT WORKING; WOOOOOOOOOOOOOOOO LET'S GOOOOOOOOOOOOOOOOOOOOOOOO THAT BUG WAS THE BANE OF MY EXISTANCE
+</details>
 
 <details>
     <summary>v1.7 changenotes</summary>

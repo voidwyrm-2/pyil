@@ -63,6 +63,7 @@ isa = None
 
 ifjump = False
 elsejump = False
+isif = False
 iselse = False
 
 cangoto = True
@@ -95,11 +96,14 @@ def encrypt(numbers: str | list | tuple):
 
 
 def trueparse(line: str):
+    shouldwork = True
     global pointer
     global isa
     global ifjump
     global elsejump
+    global isif
     global iselse
+    global cangoto
     global transnums
     #print('line: ' + line)
     sl = line.split(' ')
@@ -110,8 +114,12 @@ def trueparse(line: str):
     if DEBUG[0]: print(f'isa:{isa}, ifjump:{ifjump}, elsejump:{elsejump}, iselse{iselse}')
     if DEBUG[1]: print(f'line:{line}')
 
-    if (not ifjump and not elsejump) or (iselse or isa == None):
+
+    if not ifjump and not elsejump:
+        
         if sl[0].startswith('##'): return
+        
+        if sl[0] != 'goto' and not cangoto: cangoto = True; pass
 
         if sl[0] == 'print': print(f'pointer: {pointer}')
     
@@ -152,10 +160,12 @@ def trueparse(line: str):
 
         elif sl[0] == 'if':
             #print(f'got {bool(sl[1])} from the bool')
-            if isa != bool(sl[1]): ifjump = True; elsejump = False#; print('got "is False"')
-            else: ifjump == False; elsejump = True#; print('got "is True"')
+            if isa != bool(sl[1]): ifjump = True; iselse = True#; print('got "is False"')
+            else: ifjump == False; isif = True#; print('got "is True"')
 
-        elif sl[0] == 'else' and isa != None: iselse = True
+        elif sl[0] == 'else' and isif: elsejump = True
+
+        #elif sl[0] == 'end': None
 
         elif sl[0] == 'cleartrans': transnums.clear()
 
@@ -169,15 +179,13 @@ def trueparse(line: str):
         else:
             if sl[0] != 'else' and sl[0] != 'end' and sl[0] != 'goto' and sl[0] != '': print(line)
 
-    elif ifjump:
-        if sl[0] == 'else': ifjump = False; iselse == True
+    elif ifjump and sl[0] == 'else': ifjump = False; iselse == True; print
 
-    elif elsejump:
+    elif elsejump and sl[0] == 'end': ifjump = False; elsejump = False; isif = False; iselse == False; isa = None#; print('found "end"! continuing as normal!')
         #if sl[0] == 'else': ifjump = False; elsejump = False; iselse == False
-        if sl[0] == 'end': ifjump = False; elsejump = False; iselse == False; isa = None
 
-    elif iselse:
-        if sl[0] == 'end': ifjump = False; elsejump = False; iselse == False; isa = None
+    #elif iselse: None
+        #if sl[0] == 'end': ifjump = False; elsejump = False; iselse == False; isa = None
 
 
 def fakeparse(input: tuple):
@@ -220,7 +228,7 @@ def parsegrab(file): fakeparse(grab(file))
 print('''welcome to the pyil interpreter!
 
 type a vaild pyil action to run it
-type "file" or "run" [file name, not including extension] to run a file; file must be a .pyl
+type "file/run [file name, not including extension]" to run a file; file must be a .pyl or .pyil
 type "reset" to reset the pointer to zero(0)''')
 running = True
 while running:
