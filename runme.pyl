@@ -10,6 +10,9 @@ anything that is not a valid action is read as a comment(and therefore, is print
 the most basic action is "print", it prints out the pointer's current value
 print
 
+to stop a line from running completely, add "##" to the subtract
+##print
+
 
 the actions "add" and "sub" are the second most basic actions
 they add X to the pointer and subtract X to and from the the pointer, respectively
@@ -62,6 +65,11 @@ else
 add 2
 end
 print
+
+
+
+
+
 
 
 this would be the part where I talk about the "goto" action, but that one's still in-progress

@@ -8,4 +8,5 @@ else
 got "not 10"
 div 3
 end
+program end
 print

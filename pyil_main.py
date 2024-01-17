@@ -8,10 +8,17 @@ def minmax(input: int | float, min: int | float, max: int | float):
     else: return input
 
 
+DEBUG = [False, False]
+
 pointer = 0
+
 isa = None
-jump = False
+
+ifjump = False
+elsejump = False
 iselse = False
+
+cangoto = True
 
 def grab(file):
     if not Path(file + '.pyl').exists(): print(f'error: {file}.pyl does not exist'); return ('', False)
@@ -22,10 +29,11 @@ def grab(file):
 def get(): getin = input('type a number below\n'); return int(getin)
 
 
-def trueparse(line: str):
+def trueparse(line: str, lis: list):
     global pointer
     global isa
-    global jump
+    global ifjump
+    global elsejump
     global iselse
     #print('line: ' + line)
     sl = line.split(' ')
@@ -33,8 +41,13 @@ def trueparse(line: str):
     #print(sl)
     #print(type(sl))
     
-    if (not jump and not iselse) or isa == None:
-        if sl[0] == 'print': print(pointer)
+    if DEBUG[0]: print(f'isa:{isa}, ifjump:{ifjump}, elsejump:{elsejump}, iselse{iselse}')
+    if DEBUG[1]: print(f'line:{line}')
+
+    if (not ifjump and not elsejump) or (iselse or isa == None):
+        if sl[0].startswith('##'): return
+
+        if sl[0] == 'print': print(f'pointer: {pointer}')
     
         elif sl[0] == 'add': pointer += int(sl[1])
     
@@ -48,6 +61,13 @@ def trueparse(line: str):
     
         elif sl[0] == 'make': pointer = int(sl[1])
 
+        elif sl[0] == 'let':
+            if len(sl) == 3:
+                if pointer == int(sl[2]): pointer = int(sl[1])
+            else:
+                if pointer == 0: pointer = int(sl[1])
+
+
         elif sl[0] == 'get': pointer = get()
     
         elif sl[0] == 'is':
@@ -55,24 +75,25 @@ def trueparse(line: str):
             else: print(f'pointer is not {sl[1]}'); isa = False
 
         elif sl[0] == 'if':
-            print(f'got {bool(sl[1])} from the bool')
-            if isa != bool(sl[1]): jump = True
-            else: jump == False
+            #print(f'got {bool(sl[1])} from the bool')
+            if isa != bool(sl[1]): ifjump = True; elsejump = False#; print('got "is False"')
+            else: ifjump == False; elsejump = True#; print('got "is True"')
 
         elif sl[0] == 'else' and isa != None: iselse = True
 
-        elif sl[0] == 'goto': pass
-            #sln = sl[1]
-            #sln = minmax(sln, 0, len(sinp))
         
         else:
             if sl[0] != 'else' and sl[0] != 'end' and sl[0] != '': print(line)
 
-    elif jump:
-        if sl[0] == 'else': jump = False; iselse == True
+    elif ifjump:
+        if sl[0] == 'else': ifjump = False; iselse == True
+
+    elif elsejump:
+        #if sl[0] == 'else': ifjump = False; elsejump = False; iselse == False
+        if sl[0] == 'end': ifjump = False; elsejump = False; iselse == False; isa = None
 
     elif iselse:
-        if sl[0] == 'end': jump = False; iselse == False; isa = None
+        if sl[0] == 'end': ifjump = False; elsejump = False; iselse == False; isa = None
 
 
 def fakeparse(input: tuple):
@@ -88,10 +109,15 @@ def fakeparse(input: tuple):
             break
         elif l.split(' ')[0] == 'loop':
             #print('loop found!')
-            for i in range(int(l.split(' ')[1])): trueparse(l.split(' ')[2] + ' ' + l.split(' ')[3])
+            for i in range(int(l.split(' ')[1])): trueparse(l.split(' ')[2] + ' ' + l.split(' ')[3], sinp)
+        elif l.split(' ')[0] == 'goto' and cangoto:
+            if len(l.split(' ')) == 2:
+                sln = int(l.split(' ')[1])
+                sln = minmax(sln, 0, len(sinp))
+            else: None
         else:
             #print('got else in fakeparse!')
-            trueparse(l)
+            trueparse(l, sinp)
 
 def parsegrab(file): fakeparse(grab(file))
 
