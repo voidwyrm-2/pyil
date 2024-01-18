@@ -11,7 +11,14 @@ pyil_main.py is where all the cool stuff happens
 Me bad at making good looking and simple code though, so please open an issue if you have a optimization you'd like to share!
 
 
-### Currently at version v1.9
+### Currently at version v2.0
+
+<details>
+    <summary>v2.0 changenotes</summary>
+    - added "new", "pointers", "getpointer", "setpointer", and "topointer" actions(for basic pointer instancing)
+
+    - "goto" action still does not work(ahhhh)
+</details>
 
 <details>
     <summary>v1.9 changenotes</summary>

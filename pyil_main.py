@@ -73,6 +73,7 @@ def log(data):
 DEBUG = [False, False]
 
 pointer = 0
+pointers = []
 transnums = []
 
 isa = None
@@ -185,7 +186,6 @@ def trueparse(line: str):
             else:
                 if pointer == 0: pointer = int(sl[1])
 
-
         elif sl[0] == 'get': pointer = get()
     
         elif sl[0] == 'is':
@@ -222,6 +222,22 @@ def trueparse(line: str):
                 elif sl[1] == 'div': pointer //= rand
                 elif sl[1] == 'make': pointer = rand
             else: pointer = rand
+
+        elif sl[0] == 'new':
+            if len(sl) >= 3:
+                if sl[1] == 'pointer': pointers.append(int(sl[2]))
+            else:
+                if sl[1] == 'pointer': pointers.append(0)
+        
+        elif sl[0] == 'pointers':
+            pt = 0
+            for poi in pointers: print(f'{pt}({poi})'); pt += 1
+        
+        elif sl[0] == 'getpointer': print(f'pointer({sl[1]}): {pointers[int(sl[1])]}')
+
+        elif sl[0] == 'setpointer': pointers[int(sl[1])] = int(sl[2])
+
+        elif sl[0] == 'topointer': pointer = pointers[int(sl[1])]
         
         else:
             if sl[0] != 'else' and sl[0] != 'end' and sl[0] != 'goto' and sl[0] != '': print(line) ##otherwise print it to the console

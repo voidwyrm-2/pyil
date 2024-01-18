@@ -1,0 +1,11 @@
+this file is a test of the new pointer instancing functionality
+
+new pointer
+new pointer 10
+new pointer 134
+
+pointers
+
+getpointer 0
+getpointer 1
+getpointer 2
