@@ -174,8 +174,14 @@ def trueparse(line: str):
         elif sl[0] == 'make': pointer = int(sl[1])
 
         elif sl[0] == 'let':
+            antilet = False
             if len(sl) == 3:
-                if pointer == int(sl[2]): pointer = int(sl[1])
+                if '!' in sl[2]: antilet = True
+
+                if antilet:
+                    if pointer != int(sl[2].replace('!', '')): pointer = int(sl[1])
+                else:
+                    if pointer == int(sl[2]): pointer = int(sl[1])
             else:
                 if pointer == 0: pointer = int(sl[1])
 
