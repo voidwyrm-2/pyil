@@ -145,49 +145,62 @@ def trueparse(line: str):
 
 
     if not ifjump and not elsejump:
-        
-        if sl[0].startswith('##'): return ##if the line starts with the do-not-run flag, don't parse
-        
-        if sl[0] != 'goto' and not cangoto: cangoto = True; pass ##if cangoto is false and the current action isn't goto, make it true
 
-        if sl[0] == 'print': print(f'pointer: {pointer}') ##print the pointer's current value to the console
-    
-        elif sl[0] == 'add': ##add a number
+        ##if the line starts with the do-not-run flag, don't parse
+        if sl[0].startswith('##'): return
+
+        ##if cangoto is false and the current action isn't goto, make it true
+        if sl[0] != 'goto' and not cangoto: cangoto = True; pass
+
+        ##print the pointer's current value to the console
+        if sl[0] == 'print': print(f'pointer: {pointer}')
+
+        ##add a number
+        elif sl[0] == 'add':
             if sl[1] == 'get': pointer += get() ##if "get" is given as an instead of a number, add the user's input
             else: pointer += int(sl[1]) ##otherwise, add the given number
-    
-        elif sl[0] == 'sub': ##subtract a number
+
+        ##subtract a number
+        elif sl[0] == 'sub':
             if sl[1] == 'get': pointer -= get() ##if "get" is given as an instead of a number, subtract the user's input
             else: pointer -= int(sl[1]) ##otherwise, subtract the given number
-    
-        elif sl[0] == 'mul': ##multiply by a number
+
+        ##multiply by a number
+        elif sl[0] == 'mul':
             if sl[1] == 'get': pointer *= get() ##if "get" is given as an instead of a number, multiply by the user's input
             else: pointer *= int(sl[1]) ##otherwise, multiply by the given number
-    
-        elif sl[0] == 'div': ##divide by a number
+
+        ##divide by a number
+        elif sl[0] == 'div':
             if sl[1] == 'get': pointer //= get() ##if "get" is given as an instead of a number, divide by the user's input
             else: pointer //= int(sl[1]) ##otherwise, divide by the given number
-    
-        elif sl[0] == 'zero': pointer = 0 ##make the counter 0
 
+        ##make the counter 0
+        elif sl[0] == 'zero': pointer = 0
+
+        ##waits for the user to give any input at all
         elif sl[0] == 'wait': wait()
-    
+
+        ##makes the pointer the given number
         elif sl[0] == 'make': pointer = int(sl[1])
 
+        ##if the pointer is the second number, make it the first number
         elif sl[0] == 'let':
             antilet = False
             if len(sl) == 3:
-                if '!' in sl[2]: antilet = True
+                if '!' in sl[2]: antilet = True ##if the second number has the "!" prefix, instead if the pointer IS NOT the second number, make it the first number
 
                 if antilet:
                     if pointer != int(sl[2].replace('!', '')): pointer = int(sl[1])
                 else:
                     if pointer == int(sl[2]): pointer = int(sl[1])
             else:
-                if pointer == 0: pointer = int(sl[1])
+                if pointer == 0: pointer = int(sl[1]) ##if no second number given, make it the first number if the pointer is 0
 
+        ##get a number from the user and make the pointer that number
         elif sl[0] == 'get': pointer = get()
-    
+
+        ##checks then says if it is or is not the given number
         elif sl[0] == 'is':
             if pointer == int(sl[1]): print(f'pointer is {sl[1]}'); isa = True
             else: print(f'pointer is not {sl[1]}'); isa = False
@@ -197,19 +210,24 @@ def trueparse(line: str):
             if isa != bool(sl[1]): ifjump = True; iselse = True#; print('got "is False"')
             else: ifjump == False; isif = True#; print('got "is True"')
 
+        ##if the action is "else" and we ran the if's actions, skip the else's actions
         elif sl[0] == 'else' and isif: elsejump = True
 
         #elif sl[0] == 'end': None
 
+        ##clear the list of numbers to translate
         elif sl[0] == 'cleartrans': transnums.clear()
 
+        ##add the current pointer's value to the list of numbers to translate
         elif sl[0] == 'totrans': transnums.append(pointer)
 
+        ##translate all the numbers in the list of numbers to translate
         elif sl[0] == 'trans':
             if sl[1] == 'L': print(translate(transnums))
             elif sl[1] == 'E': print(encrypt(transnums))
             else: print(f'(trans) unknown input "{sl[1]}"')
-        
+
+        ##generates a random number between the given numbers
         elif sl[0] == 'rand':
             rand = 0
             rand = randint(int(sl[-2]), int(sl[-1]))
@@ -221,30 +239,46 @@ def trueparse(line: str):
                 elif sl[1] == 'mul': pointer *= rand
                 elif sl[1] == 'div': pointer //= rand
                 elif sl[1] == 'make': pointer = rand
-            else: pointer = rand
+            else: pointer = rand ##otherwise, make the pointer the generated number
 
+        ##adds a new instance of the given object; currently only works with the pointer
         elif sl[0] == 'new':
-            if len(sl) >= 3:
-                if sl[1] == 'pointer': pointers.append(int(sl[2]))
-            else:
-                if sl[1] == 'pointer': pointers.append(0)
+            if len(sl) >= 3: ##if it has more inputs than just two
+                if sl[1] == 'pointer':
+                    if sl[2] == 'P': pointers.append(pointer) ##if it is "P", add a new instance of the pointer with the same value as the main pointer
+                    else: pointers.append(int(sl[2])) ##otherwise, add a new instance of the pointer with the given value
+            else: ##otherwise
+                if sl[1] == 'pointer': pointers.append(0) ##if it is "pointer", add a new instance of the pointer with a value of 0
         
+        ##prints each pointer instance that is not the main pointer and its value
         elif sl[0] == 'pointers':
             pt = 0
             for poi in pointers: print(f'{pt}({poi})'); pt += 1
+            #print(f'total pointers: {pt}')
         
-        elif sl[0] == 'getpointer': print(f'pointer({sl[1]}): {pointers[int(sl[1])]}')
+        ##"print" action for pointer instances that aren't the main pointer
+        elif sl[0] == 'pointerget': print(f'pointer({sl[1]}): {pointers[int(sl[1])]}')
 
-        elif sl[0] == 'setpointer': pointers[int(sl[1])] = int(sl[2])
+        ##"make" action for pointer instances that aren't the main pointer
+        elif sl[0] == 'pointerset': pointers[int(sl[1])] = int(sl[2])
 
+        ##sets the main pointer to the given pointer instance
         elif sl[0] == 'topointer': pointer = pointers[int(sl[1])]
+
+        ##"add" action for pointer instances that aren't the main pointer
+        elif sl[0] == 'pointeradd':
+            if sl[2] == 'P': pointers[int(sl[1])] += pointer
+            else: pointers[int(sl[1])] += int(sl[2])
         
+        ##if it's not a valid action and it's not empty, treat it as a comment and print it to the console
         else:
             if sl[0] != 'else' and sl[0] != 'end' and sl[0] != 'goto' and sl[0] != '': print(line) ##otherwise print it to the console
 
     elif ifjump and sl[0] == 'else': ifjump = False; iselse == True; print
 
     elif elsejump and sl[0] == 'end': ifjump = False; elsejump = False; isif = False; iselse == False; isa = None#; print('found "end"! continuing as normal!')
+
+    else: print('how did we get here, after the else and end?')
         #if sl[0] == 'else': ifjump = False; elsejump = False; iselse == False
 
     #elif iselse: None
@@ -267,7 +301,7 @@ def fakeparse(input: tuple):
     maxlines = len(sinp) ##gets the amount of lines
     #print(f'maxlines:{maxlines}')
     lineindex = 0 ##the current line
-    while lineindex != maxlines: #if we have not reached the end of the file
+    while lineindex != maxlines: ##if we have not reached the end of the file
         l = sinp[lineindex] ##get the contents of the current line
         #log(f'lineindex:{lineindex + 1}("{l}")')
         #print(l.split(' '))

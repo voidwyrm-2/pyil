@@ -6,6 +6,6 @@ new pointer 134
 
 pointers
 
-getpointer 0
-getpointer 1
-getpointer 2
+pointerget 0
+pointerget 1
+pointerget 2
