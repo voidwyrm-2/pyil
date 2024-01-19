@@ -9,55 +9,14 @@ vaild_exts = [
 ]
 
 
-dontprint = [
-    ''
-]
+dontprint = ['']
 
 
-symbols = [
-    '!',
-    '@',
-    '#',
-    '$',
-    "%",
-    '^',
-    '&',
-    '*',
-    '(',
-    ')'
-    
+symbols = ['!','@','#','$','%','^','&','*','(',')'
     #,''
 ]
 
-letters = [
-    'a',
-    'b',
-    'c',
-    'd',
-    'e',
-    'f',
-    'g',
-    'h',
-    'i',
-    'j',
-    'k',
-    'l',
-    'm',
-    'n',
-    'o',
-    'p',
-    'q',
-    'r',
-    's',
-    't',
-    'u',
-    'v',
-    'w',
-    'x',
-    'y',
-    'z',
-    ' '
-]
+letters = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',' ']
 
 def minmax(input: int | float, min: int | float, max: int | float):
     if input < min: return min
@@ -72,18 +31,30 @@ def log(data):
 
 DEBUG = [False, False]
 
+#pointer storages
 pointer = 0
 pointers = []
+
+#translation storage
 transnums = []
 
+#"is" bool
 isa = None
 
+#"if" bools
 ifjump = False
 elsejump = False
 isif = False
 iselse = False
 
+#"goto" bool
 cangoto = True
+
+#function storages
+funcs = []
+gotfunc= False
+
+
 
 def grab(file):
     tfile = ''
@@ -123,6 +94,15 @@ def encrypt(numbers: str | list | tuple):
         enc = f'{enc}{symbols[enum]}'
     return f'encrypt: {enc}'
 
+def stitchfunc(facts: str):
+    out = ''
+    sfacts = facts.split('/')
+    for fac in sfacts:
+        #print(f'sfac:{sfac}')
+        out = f'{out}{fac.replace(",", " ")}\n'
+    return out.removesuffix('\n')
+
+
 
 def trueparse(line: str):
     shouldwork = True ##if this is true, the program works flawlessly, but otherwise it breaks with no explaination
@@ -134,12 +114,13 @@ def trueparse(line: str):
     global iselse
     global cangoto
     global transnums
+    global funcs
     #print('line: ' + line)
     sl = line.split(' ')
     #print(sl)
     #print(sl)
     #print(type(sl))
-    
+
     if DEBUG[0]: print(f'isa:{isa}, ifjump:{ifjump}, elsejump:{elsejump}, iselse{iselse}') ##debug info
     if DEBUG[1]: print(f'line:{line}') ##debug info
 
@@ -249,13 +230,27 @@ def trueparse(line: str):
                     else: pointers.append(int(sl[2])) ##otherwise, add a new instance of the pointer with the given value
             else: ##otherwise
                 if sl[1] == 'pointer': pointers.append(0) ##if it is "pointer", add a new instance of the pointer with a value of 0
-        
+
+        elif sl[0] == 'func':
+            sfunc = sl[1].split(':')
+            funcs.append((sfunc[0], stitchfunc(sfunc[1])))
+
+        elif sl[0] == 'funcs':
+            funccount = 0
+            for func in funcs:
+                pfunc = func[0], func[1].replace("\n", '/')
+                print(f'{funccount}-{pfunc[0]}({pfunc[1]})')
+
+        elif sl[0] == 'funcdel': del funcs[int(sl[1])]
+
+        elif sl[0] == 'funcsclear': funcs.clear()
+
         ##prints each pointer instance that is not the main pointer and its value
         elif sl[0] == 'pointers':
             pt = 0
             for poi in pointers: print(f'{pt}({poi})'); pt += 1
             #print(f'total pointers: {pt}')
-        
+
         ##"print" action for pointer instances that aren't the main pointer
         elif sl[0] == 'pointerget': print(f'pointer({sl[1]}): {pointers[int(sl[1])]}')
 
@@ -285,6 +280,15 @@ def trueparse(line: str):
         #if sl[0] == 'end': ifjump = False; elsejump = False; iselse == False; isa = None
 
 
+def runfunc(funcindex: int, funcname: str):
+    global gotfunc
+    global funcs; thefunc = funcs[funcindex]
+    if thefunc[0] == funcname:
+        thefuncacts = thefunc[1].split('\n')
+        for funcl in thefuncacts: trueparse(funcl)
+    gotfunc = False
+
+
 def fakeparse(input: tuple):
     global pointer
     global cangoto
@@ -293,6 +297,7 @@ def fakeparse(input: tuple):
     global elsejump
     global isif
     global iselse
+    global gotfunc
     #print('whaaat?')
     if not input[1]: return ##small do-not-run check
     sinp = input[0].split('\n') ##split the input by lines
@@ -332,7 +337,15 @@ def fakeparse(input: tuple):
 
         elif l.split(' ')[0] == 'lines': print(f'line count: {maxlines}') ##if it's "lines", give the amount of lines in the file
 
-        else: trueparse(l) ##otherwise parse it as pyil code
+        else:
+            print(funcs)
+            functicker = 0
+            for fun in funcs:
+                print(f'checking {fun}...')
+                if l == fun[0]: print(f'found match!({l}=={fun[0]})'); gotfunc = True; runfunc(functicker, fun)
+                else: functicker += 1
+
+            if not gotfunc: trueparse(l) ##otherwise parse it as pyil code
         
         if cangoto: lineindex += 1 ##increment the current line by 1
 

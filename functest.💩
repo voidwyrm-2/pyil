@@ -1,0 +1,9 @@
+this file is a test of the new "func" action
+
+func addthree:add,1/add,1/add,1/print
+
+funcs
+
+wait
+
+addthree

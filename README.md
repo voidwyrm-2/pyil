@@ -11,7 +11,12 @@ pyil_main.py is where all the cool stuff happens
 Me bad at making good looking and simple code though, so please open an issue if you have a optimization you'd like to share!
 
 
-### Currently at version v2.1
+### Currently at version v2.2
+
+<details>
+    <summary>v2.2 changenotes</summary>
+~ added "func", "funcs", "funcdel", and "funcsclear" actions(allows for function creation AHAHAHAHAHAHAHAHA)
+</details>
 
 <details>
     <summary>v2.1 changenotes</summary>
