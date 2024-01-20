@@ -1,0 +1,11 @@
+##basic test of pyil
+print
+add 2
+print
+make 5
+add get
+print
+sub 2
+##we got to here 1
+print
+##we got to here 2

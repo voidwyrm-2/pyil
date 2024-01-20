@@ -264,7 +264,7 @@ def trueparse(line: str):
         elif sl[0] == 'pointeradd':
             if sl[2] == 'P': pointers[int(sl[1])] += pointer
             else: pointers[int(sl[1])] += int(sl[2])
-        
+
         ##if it's not a valid action and it's not empty, treat it as a comment and print it to the console
         else:
             if sl[0] != 'else' and sl[0] != 'end' and sl[0] != 'goto' and sl[0] != '': print(line) ##otherwise print it to the console
